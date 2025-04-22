@@ -1,0 +1,264 @@
+/* Global RTL Styles */
+:root {
+  --v-layout-left: right;
+  --v-layout-right: left;
+}
+
+/* Base RTL styles */
+html {
+  direction: rtl;
+}
+
+body {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Vuetify RTL overrides */
+.v-application {
+  direction: rtl;
+  text-align: right;
+}
+
+.v-application .v-list-item {
+  text-align: right;
+}
+
+.v-application .v-list-item__prepend {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+.v-application .v-list-item__append {
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+/* Form elements */
+.v-text-field input,
+.v-textarea textarea {
+  text-align: right;
+}
+
+.v-select .v-select__selection {
+  text-align: right;
+}
+
+/* Cards and containers */
+.v-card {
+  text-align: right;
+}
+
+.v-card-text {
+  text-align: right;
+}
+
+/* Tables */
+.v-data-table {
+  direction: rtl;
+}
+
+.v-data-table-header {
+  text-align: right;
+}
+
+/* Buttons */
+.v-btn {
+  text-align: right;
+}
+
+/* Icons */
+.v-icon {
+  margin-left: 4px;
+  margin-right: 0;
+}
+
+/* Navigation */
+.v-navigation-drawer {
+  direction: rtl;
+}
+
+/* Tooltips */
+.v-tooltip__content {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Dialogs */
+.v-dialog {
+  direction: rtl;
+}
+
+.v-dialog .v-card {
+  text-align: right;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  direction: rtl;
+  text-align: right;
+}
+
+p, span, div {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Lists */
+.v-list {
+  direction: rtl;
+}
+
+.v-list-item {
+  text-align: right;
+}
+
+/* Grid system */
+.v-row {
+  direction: rtl;
+}
+
+/* Forms */
+.v-form {
+  direction: rtl;
+}
+
+.v-input {
+  direction: rtl;
+}
+
+/* Chips */
+.v-chip {
+  direction: rtl;
+}
+
+/* Alerts */
+.v-alert {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Progress */
+.v-progress-linear {
+  direction: rtl;
+}
+
+/* Tabs */
+.v-tabs {
+  direction: rtl;
+}
+
+/* Expansion panels */
+.v-expansion-panel {
+  direction: rtl;
+}
+
+/* Menus */
+.v-menu__content {
+  direction: rtl;
+}
+
+/* Toolbars */
+.v-toolbar {
+  direction: rtl;
+}
+
+/* Pagination */
+.v-pagination {
+  direction: rtl;
+}
+
+/* Snackbars */
+.v-snackbar {
+  direction: rtl;
+}
+
+/* Bottom sheets */
+.v-bottom-sheet {
+  direction: rtl;
+}
+
+/* Steppers */
+.v-stepper {
+  direction: rtl;
+}
+
+/* Timelines */
+.v-timeline {
+  direction: rtl;
+}
+
+/* Carousels */
+.v-carousel {
+  direction: rtl;
+}
+
+/* Rating */
+.v-rating {
+  direction: rtl;
+}
+
+/* File inputs */
+.v-file-input {
+  direction: rtl;
+}
+
+/* Sliders */
+.v-slider {
+  direction: rtl;
+}
+
+/* Switch */
+.v-switch {
+  direction: rtl;
+}
+
+/* Checkbox */
+.v-checkbox {
+  direction: rtl;
+}
+
+/* Radio */
+.v-radio {
+  direction: rtl;
+}
+
+/* Select */
+.v-select {
+  direction: rtl;
+}
+
+/* Textarea */
+.v-textarea {
+  direction: rtl;
+}
+
+/* Text field */
+.v-text-field {
+  direction: rtl;
+}
+
+/* Combobox */
+.v-combobox {
+  direction: rtl;
+}
+
+/* Autocomplete */
+.v-autocomplete {
+  direction: rtl;
+}
+
+/* Date picker */
+.v-date-picker {
+  direction: rtl;
+}
+
+/* Time picker */
+.v-time-picker {
+  direction: rtl;
+}
+
+/* Color picker */
+.v-color-picker {
+  direction: rtl;
+} 

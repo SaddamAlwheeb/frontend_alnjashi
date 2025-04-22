@@ -4,27 +4,21 @@
       <v-card-title class="text-right">
         {{ formData?.id ? 'تعديل القناة' : 'إضافة قناة جديدة' }}
       </v-card-title>
- 
+
       <v-card-text>
         <v-form ref="form" v-model="valid">
-          <v-text-field
-            v-model="channel.name"
-            label="اسم القناة"
+          <v-select
+            v-model="channel.type"
+            :items="type"
+            item-value="value"
+            item-title="text"
+            label="نوع القناة"
             :rules="[rules.required]"
             required
-          />
-          <v-textarea
-            v-model="channel.description"
-            label="الوصف"
-            :rules="[rules.required]"
-            required
-          />
-          <v-text-field
-            v-model="channel.image"
-            label="رابط الصورة"
-            :rules="[rules.required, rules.validUrl]"
-            required
-          />
+          ></v-select>
+          <v-text-field v-model="channel.name" label="اسم القناة" :rules="[rules.required]" required />
+          <v-textarea v-model="channel.description" label="الوصف" :rules="[rules.required]" required />
+          <v-text-field v-model="channel.image" label="رابط الصورة" :rules="[rules.required, rules.validUrl]" required />
         </v-form>
       </v-card-text>
 
@@ -54,16 +48,21 @@ export default {
       valid: false,
       channel: {
         name: '',
-        // subtitle: '',
+        type: '',
         description: '',
         image: '',
       },
+      type: [
+          { text: 'يوتيوب', value: 1 },
+          { text: 'تويتر', value: 2 },
+          { text: 'تك توك', value: 3 },
+        ],
       rules: {
         required: v => !!v || 'هذا الحقل مطلوب',
         validUrl: value => {
-        const pattern = /^(http(s?):)([/|.|\w|\s|-])/;
-        return pattern.test(value) || 'يجب إدخال رابط صورة صالح ';
-      }
+          const pattern = /^(http(s?):)([/|.|\w|\s|-])/;
+          return pattern.test(value) || 'يجب إدخال رابط صورة صالح ';
+        }
       },
     };
   },

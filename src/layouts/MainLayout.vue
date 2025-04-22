@@ -1,6 +1,6 @@
 <!-- src/layouts/MainLayout.vue -->
 <template>
-    <v-app>
+    <v-app dir="rtl">
       <AppSidebar v-model="drawer" />
       <AppNavbar @toggle-sidebar="drawer = !drawer" />
   
@@ -19,4 +19,11 @@
   
   const drawer = ref(true)
   </script>
+  
+  <style>
+  .v-application {
+    direction: rtl;
+    text-align: right;
+  }
+  </style>
   

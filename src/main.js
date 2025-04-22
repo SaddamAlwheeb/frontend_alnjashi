@@ -7,12 +7,10 @@ import * as directives from 'vuetify/directives';
 // import { VDataTable } from 'vuetify/labs/VDataTable';
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
+import './assets/styles/global.css';
 
 const vuetify = createVuetify({
-  components: {
-    ...components,
-    // VDataTable,
-  },
+  components,
   directives,
   theme: {
     defaultTheme: 'light'
@@ -21,8 +19,13 @@ const vuetify = createVuetify({
     VSelect: {
       variant: 'outlined',
       density: 'comfortable',
+    },
+    VNavigationDrawer: {
+      location: 'right'
     }
-  }
+  },
+  // Force RTL
+  rtl: true
 });
 
 const app = createApp(App);

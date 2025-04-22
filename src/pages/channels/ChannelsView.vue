@@ -9,7 +9,7 @@
         <v-btn color="primary" @click="openForm()">إضافة قناة</v-btn>
       </v-col>
     </v-row>
- 
+
     <!-- مكون النموذج الجانبي -->
     <ChannelForm :dialog="formDialog" :form-data="editingChannel" :on-close="closeForm" @save="handleSave" />
 
@@ -25,31 +25,49 @@
       </v-col>
     </v-row>
 
+
+
+
     <!-- عرض القنوات -->
     <v-row v-else>
-      <v-col v-for="channel in channels" :key="channel.id" cols="12" sm="6" md="4" lg="3">
-        <v-card class="channel-card mx-auto my-4 d-flex flex-column" elevation="3" rounded="xl">
-          <v-img :src="channel.image" height="180px" cover />
+      <v-row class="mb-4">
+        <v-col cols="12" md="4">
+          <v-select
+            v-model="type"
+            :items="[{ text: 'الكل', value: '' }, ...channelTypes]"
+            item-title="text"
+            item-value="value"
+            label="فلترة حسب نوع القناة"
+            dense
+            clearable
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col v-for="channel in filteredChannels" :key="channel.id" cols="12" sm="6" md="4" lg="3">
+          <v-card class="channel-card mx-auto my-4 d-flex flex-column" elevation="3" rounded="xl">
+            <v-img :src="channel.image" height="180px" cover />
 
-          <v-card-title class="text-right text-h6 font-weight-bold white-space-normal">
-            {{ channel.name }}
-          </v-card-title>
+            <v-card-title class="text-right text-h6 font-weight-bold white-space-normal">
+              {{ channel.name }}
+            </v-card-title>
 
 
-          <v-card-text class="description text-right ml-6">
-            {{ channel.description }}
-          </v-card-text>
+            <v-card-text class="description text-right ml-6">
+              {{ channel.description }}
+            </v-card-text>
 
-          <v-card-actions class="justify-end">
-            <v-btn icon @click="openForm(channel)">
-              <v-icon color="primary">mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn icon @click="confirmDelete(channel)">
-              <v-icon color="error">mdi-delete</v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
+            <v-card-actions class="justify-end">
+              <v-btn icon @click="openForm(channel)">
+                <v-icon color="primary">mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn icon @click="confirmDelete(channel)">
+                <v-icon color="error">mdi-delete</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-row>
 
     <!-- تأكيد الحذف -->
@@ -69,6 +87,7 @@
 </template>
 
 <script>
+import { BASE_URL } from '@/config';
 import ChannelForm from './ChannelForm.vue';
 
 export default {
@@ -82,7 +101,20 @@ export default {
       confirmDialog: false,
       toDelete: null,
       isLoading: false,
+      type: '',
+      channelTypes: [
+        { text: 'يوتيوب', value: 1 },
+        { text: 'تويتر', value: 2 },
+        { text: 'تك توك', value: 3 },
+      ],
     };
+  },
+
+  computed: {
+    filteredChannels() {
+      if (!this.type) return this.channels;
+      return this.channels.filter(c => c.type === this.type);
+    },
   },
 
   async mounted() {
@@ -93,7 +125,7 @@ export default {
     async fetchChannels() {
       this.isLoading = true;
       try {
-        const res = await fetch('http://localhost:5454/api/channels/');
+        const res = await fetch(`${BASE_URL}api/channels/`);
         const data = await res.json();
         this.channels = data.results || [];
       } catch (err) {
@@ -117,8 +149,8 @@ export default {
       const isEdit = !!channelData.id;
 
       const url = isEdit
-        ? `http://localhost:5454/api/channels/${channelData.id}/`
-        : 'http://localhost:5454/api/channels/';
+        ? `${BASE_URL}api/channels/${channelData.id}/`
+        : `${BASE_URL}api/channels/`;
       const method = isEdit ? 'PUT' : 'POST';
 
       try {
@@ -151,7 +183,7 @@ export default {
       if (!this.toDelete) return;
 
       try {
-        await fetch(`http://localhost:5454/api/channels/${this.toDelete.id}/`, {
+        await fetch(`${BASE_URL}api/channels/${this.toDelete.id}/`, {
           method: 'DELETE',
         });
         this.channels = this.channels.filter(c => c.id !== this.toDelete.id);

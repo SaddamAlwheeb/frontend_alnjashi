@@ -20,7 +20,16 @@
         <template #item.sentiment="{ item }">
           <v-select v-model="item.sentiment" :items="sentiments" item-title="text" item-value="value" dense hide-details
             style="min-width: 100px" @change="updateSentiment(item)" />
+        </template>
 
+        <template #item.is_comment_bank="{ item }">
+          <v-switch
+            v-model="item.is_comment_bank"
+            inset
+            hide-details
+            color="green"
+            @change="updateCommentBank(item)"
+          />
         </template>
       </v-data-table>
 
@@ -34,6 +43,8 @@
 </template>
   
 <script>
+import { BASE_URL } from '@/config';
+
 export default {
   name: 'CommentManager',
   data() {
@@ -51,6 +62,7 @@ export default {
       headers: [
         { title: 'نص التعليق', key: 'comment_text', sortable: false },
         { title: 'حالة التعليق', key: 'sentiment', sortable: false },
+        { title: 'بنك التعليقات', key: 'is_comment_bank', sortable: false }, 
       ],
     };
   },
@@ -67,7 +79,7 @@ export default {
     async fetchComments() {
       this.loading = true;
       try {
-        const res = await fetch('http://localhost:5454/api/comments/');
+        const res = await fetch(`${BASE_URL}api/comments/`);
         const data = await res.json();
         this.comments = data.results || [];
       } catch (err) {
@@ -78,13 +90,25 @@ export default {
     },
     async updateSentiment(comment) {
       try {
-        await fetch(`http://localhost:5454/api/comments/${comment.id}/`, {
+        await fetch(`${BASE_URL}api/comments/${comment.id}/`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ sentiment: comment.sentiment }),
         });
       } catch (err) {
         console.error('خطأ في تحديث التعليق:', err);
+      }
+    },
+
+    async updateCommentBank(comment) {
+      try {
+        await fetch(`${BASE_URL}api/comments/${comment.id}/`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ is_comment_bank: comment.is_comment_bank }),
+        });
+      } catch (err) {
+        console.error('خطأ في تحديث بنك التعليقات:', err);
       }
     },
     async bulkUpdateSentiment() {

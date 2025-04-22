@@ -16,7 +16,6 @@
             label="اختر القناة"
             :rules="[rules.required]"
             required
-            
           ></v-select>
 
           <v-text-field
