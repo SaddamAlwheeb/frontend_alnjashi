@@ -9,16 +9,31 @@
         <v-form ref="form" v-model="valid">
           <v-select
             v-model="channel.type"
-            :items="type"
+            :items="channelTypes"
             item-value="value"
             item-title="text"
             label="نوع القناة"
             :rules="[rules.required]"
             required
           ></v-select>
-          <v-text-field v-model="channel.name" label="اسم القناة" :rules="[rules.required]" required />
-          <v-textarea v-model="channel.description" label="الوصف" :rules="[rules.required]" required />
-          <v-text-field v-model="channel.image" label="رابط الصورة" :rules="[rules.required, rules.validUrl]" required />
+          <v-text-field 
+            v-model="channel.name" 
+            label="اسم القناة" 
+            :rules="[rules.required]" 
+            required 
+          />
+          <v-textarea 
+            v-model="channel.description" 
+            label="الوصف" 
+            :rules="[rules.required]" 
+            required 
+          />
+          <v-text-field 
+            v-model="channel.image" 
+            label="رابط الصورة" 
+            :rules="[rules.required, rules.validUrl]" 
+            required 
+          />
         </v-form>
       </v-card-text>
 
@@ -39,7 +54,10 @@ export default {
   props: {
     dialog: Boolean,
     formData: Object,
-    onClose: Function,
+    onClose: {
+      type: Function,
+      required: true
+    }
   },
 
   data() {
@@ -50,20 +68,20 @@ export default {
         name: '',
         type: '',
         description: '',
-        image: '',
+        image: ''
       },
-      type: [
-          { text: 'يوتيوب', value: 1 },
-          { text: 'تويتر', value: 2 },
-          { text: 'تك توك', value: 3 },
-        ],
+      channelTypes: [
+        { text: 'يوتيوب', value: 1 },
+        { text: 'تويتر', value: 2 },
+        { text: 'تك توك', value: 3 }
+      ],
       rules: {
         required: v => !!v || 'هذا الحقل مطلوب',
         validUrl: value => {
           const pattern = /^(http(s?):)([/|.|\w|\s|-])/;
-          return pattern.test(value) || 'يجب إدخال رابط صورة صالح ';
+          return pattern.test(value) || 'يجب إدخال رابط صورة صالح';
         }
-      },
+      }
     };
   },
 
@@ -78,23 +96,27 @@ export default {
     },
     dialogInternal(val) {
       if (!val) this.onClose();
-    },
+    }
   },
 
   methods: {
     resetForm() {
       this.channel = {
         name: '',
+        type: '',
         description: '',
-        image: '',
+        image: ''
       };
+      if (this.$refs.form) {
+        this.$refs.form.reset();
+      }
     },
     submit() {
       if (this.$refs.form.validate()) {
         this.$emit('save', { ...this.channel });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

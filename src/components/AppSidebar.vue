@@ -1,31 +1,32 @@
 <template>
   <v-navigation-drawer
     v-model="drawer"
-    :temporary="breadPointXS || breadPointSM"
-    :permanent="breadPointMD"
-    :rail="expand"
+    :temporary="$vuetify.display.xs || $vuetify.display.sm"
+    :permanent="$vuetify.display.mdAndUp"
+    :rail="rail"
     width="250"
     ref="drawer"
     location="right"
+    elevation="2"
   >
     <v-card class="w-100 logo-box d-flex text-center border-bottom" style="overflow: hidden" rounded="0">
       <div style="flex: 4;" class="align-self-center">
-        <div v-show="!expand || breadPointXS || breadPointSM" class="text-primary text-h6">
+        <div v-show="!rail || $vuetify.display.xs || $vuetify.display.sm" class="text-primary text-h6">
           رسالة إلى النجاشي
         </div>
       </div>
       <div style="flex: 1;">
         <v-btn
-          @click="toggleExpand"
+          @click="toggleRail"
           density="compact"
           variant="text"
-          :icon="expand ? 'mdi-chevron-double-right' : 'mdi-chevron-double-left'"
+          :icon="rail ? 'mdi-chevron-double-right' : 'mdi-chevron-double-left'"
           class="mt-1"
         />
       </div>
     </v-card>
 
-    <v-list dense nav>
+    <v-list density="compact" nav>
       <v-divider class="my-2" />
       <v-list-item
         v-for="item in menuItems"
@@ -35,6 +36,7 @@
         :prepend-icon="item.icon"
         link
         @click="navigate(item.path)"
+        :class="{'list-item-active': isActive(item.path)}"
       />
     </v-list>
   </v-navigation-drawer>
@@ -51,30 +53,17 @@ export default {
   data() {
     return {
       drawer: this.modelValue,
-      expand: true,
+      rail: false,
       menuItems: [
         { title: 'الرئيسية', icon: 'mdi-view-dashboard', path: '/' },
         { title: 'القنوات', icon: 'mdi-television-classic', path: '/channels' },
         { title: 'الفيديوهات', icon: 'mdi-video', path: '/videos' },
         { title: 'التعليقات', icon: 'mdi-comment-multiple-outline', path: '/comments' },
         { title: 'بنك التعليقات', icon: 'mdi-comment-multiple', path: '/bank-comments' },
+        { title: 'التقارير', icon: 'mdi-chart-bar', path: '/reports' },
+        { title: 'التحليلات', icon: 'mdi-chart-line', path: '/analytics' },
       ],
     }
-  },
-
-  computed: {
-    route() {
-      return this.$route
-    },
-    breadPointXS() {
-      return this.$vuetify.display.xs
-    },
-    breadPointSM() {
-      return this.$vuetify.display.sm
-    },
-    breadPointMD() {
-      return this.$vuetify.display.md
-    },
   },
 
   watch: {
@@ -88,15 +77,19 @@ export default {
 
   methods: {
     navigate(path) {
-      if (this.route.path !== path) {
+      if (this.$route.path !== path) {
         this.$router.push(path)
+      }
+      
+      if (this.$vuetify.display.xs || this.$vuetify.display.sm) {
+        this.drawer = false;
       }
     },
     isActive(path) {
-      return this.route.path === path
+      return this.$route.path === path
     },
-    toggleExpand() {
-      this.expand = !this.expand
+    toggleRail() {
+      this.rail = !this.rail
     },
   },
 }
@@ -107,18 +100,25 @@ export default {
   direction: rtl;
 }
 
-.v-list-item--active {
+.list-item-active {
   background-color: #E3F2FD !important;
   color: #1976D2 !important;
   font-weight: bold;
+  border-right: 4px solid #1976D2;
 }
 
 .v-list-item {
   text-align: right;
+  transition: all 0.3s ease;
 }
 
 .v-list-item__prepend {
   margin-left: 8px;
   margin-right: 0;
+}
+
+.logo-box {
+  height: 64px;
+  transition: all 0.3s ease;
 }
 </style>

@@ -14,10 +14,10 @@
             item-value="id"
             item-title="name"
             label="اختر القناة"
+            :loading="loadingChannels"
             :rules="[rules.required]"
             required
-          ></v-select>
-
+          />
           <v-text-field
             v-model="video.name"
             label="اسم الفيديو"
@@ -29,13 +29,6 @@
             v-model="video.image"
             label="رابط الفيديو (يوتيوب)"
             :rules="[rules.required, rules.validUrl]"
-            required
-          ></v-text-field>
-
-          <v-text-field
-            v-model="video.youtube_id"
-            label="معرف الفديوا"
-            :rules="[]"
             required
           ></v-text-field>
         </v-form>
@@ -78,10 +71,18 @@ export default {
           return pattern.test(v) || 'الرابط يجب أن يكون رابط يوتيوب صالح';
         },
       },
+      loadingChannels: false,
     };
   },
 
   watch: {
+
+    'video.image'(url) {
+      const match = url.match(/v=([^&]+)/);
+      if (match) {
+        this.video.youtube_id = match[1];
+      }
+    },
     // عند فتح الحوار، نقوم بتحديث بيانات الفيديو بناءً على formData (للتحرير) أو نعيد تعيينها للإضافة
     dialog(val) {
       this.dialogInternal = val;
@@ -99,12 +100,16 @@ export default {
 
   methods: {
     async fetchChannels() {
+      this.loadingChannels = true;
+      if (this.channels.length) return;
       try {
         const res = await fetch('http://localhost:5454/api/channels-select/');
         const data = await res.json();
         this.channels = data.results || [];
       } catch (err) {
         console.error('فشل في تحميل القنوات', err);
+      } finally {
+        this.loadingChannels = false;
       }
     },
 
@@ -117,13 +122,22 @@ export default {
         this.dialogInternal = false;
       }
     },
+    resetForm() {
+      this.video = { name: '', image: '', channel: null };
+      this.valid = false;
+      this.$refs.form?.resetValidation();
+    },
   },
 };
 </script>
 
 <style scoped>
-.v-card-title,
 .v-card-text {
   direction: rtl;
+}
+
+.v-card-title {
+  font-weight: bold;
+  font-size: 18px;
 }
 </style>
