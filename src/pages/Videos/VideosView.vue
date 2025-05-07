@@ -23,9 +23,9 @@
         <div class="d-flex flex-wrap">
           <v-select
             v-model="selectedChannel"
-            :items="channelOptions"
-            item-title="text"
-            item-value="value"
+            :items="[{ name: 'الكل', id: null }, ...channels]"
+            item-value="id"
+            item-title="name"
             label="القناة"
             density="compact"
             hide-details
@@ -182,6 +182,7 @@
   
 <script>
 import VideosForm from './VideosForm.vue';
+import { BASE_URL } from '@/config';
 
 export default {
   components: { VideosForm },
@@ -192,6 +193,7 @@ export default {
         sortBy: 'views',
         viewMode: 'grid',
         videos: [],
+        channels: [],
         formDialog: false,
         editingVideo: null,
         confirmDialog: false,
@@ -221,7 +223,7 @@ export default {
         
         // Filter by channel
         if (this.selectedChannel !== null) {
-          result = result.filter(video => video.channelId === this.selectedChannel);
+          result = result.filter(video => video.channel === this.selectedChannel);
         }
         
         // Sort videos
@@ -241,19 +243,34 @@ export default {
 
     async mounted() {
       await this.fetchVideos();
+      await this.fetchChannels();
     },
   
     methods: {
       async fetchVideos() {
         this.isLoading = true;
         try {
-          const res = await fetch('http://localhost:5454/api/videos/');
+          const res = await fetch(`${BASE_URL}api/videos/`);
           const data = await res.json();
           this.videos = data.results || [];
         } catch (err) {
           console.error('فشل في جلب الفيديوهات', err);
         } finally {
           this.isLoading = false;
+        }
+      },
+
+      async fetchChannels() {
+        this.loadingChannels = true;
+        if (this.channels.length) return;
+        try {
+          const res = await fetch(`${BASE_URL}api/channels-select/`);
+          const data = await res.json();
+          this.channels = data.results || [];
+        } catch (err) {
+          console.error('فشل في تحميل القنوات', err);
+        } finally {
+          this.loadingChannels = false;
         }
       },
 
@@ -290,8 +307,8 @@ export default {
       const isEdit = !!channelData.id;
 
       const url = isEdit
-        ? `http://localhost:5454/api/videos/${channelData.id}/`
-        : 'http://localhost:5454/api/videos/';
+        ? `${BASE_URL}api/videos/${channelData.id}/`
+        : `${BASE_URL}api/videos/`;
       const method = isEdit ? 'PUT' : 'POST';
 
       try {
@@ -318,7 +335,7 @@ export default {
       async deleteVideo() {
         if (!this.toDelete) return;
         try {
-          await fetch(`http://localhost:5454/api/videos/${this.toDelete.id}/`, {
+          await fetch(`${BASE_URL}api/videos/${this.toDelete.id}/`, {
             method: 'DELETE',
           });
           this.videos = this.videos.filter((v) => v.id !== this.toDelete.id);

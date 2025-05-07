@@ -92,7 +92,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn icon="mdi-pencil" variant="text" density="comfortable" @click="editChannel(channel)"></v-btn>
-              <v-btn icon="mdi-eye" variant="text" density="comfortable" @click="viewChannel(channel)"></v-btn>
+              <v-btn icon="mdi-eye" variant="text" density="comfortable" :href="channel.url" target="_blank"></v-btn>
               <v-btn icon="mdi-delete" variant="text" density="comfortable" color="error" @click="confirmDeleteChannel(channel)"></v-btn>
             </v-card-actions>
           </v-card>
@@ -132,7 +132,7 @@
               <td>
                 <div class="d-flex justify-end">
                   <v-btn icon="mdi-pencil" variant="text" density="compact" @click="editChannel(channel)"></v-btn>
-                  <v-btn icon="mdi-eye" variant="text" density="compact" @click="viewChannel(channel)"></v-btn>
+                  <v-btn icon="mdi-eye" variant="text" density="compact" :href="channel.url" target="_blank"></v-btn>
                   <v-btn icon="mdi-delete" variant="text" density="compact" color="error" @click="confirmDeleteChannel(channel)"></v-btn>
                 </div>
               </td>

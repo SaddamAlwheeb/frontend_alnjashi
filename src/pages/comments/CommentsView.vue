@@ -143,6 +143,7 @@
       </v-data-table>
     </v-card>
 
+
     <!-- Delete Confirmation Dialog -->
     <v-dialog v-model="showDeleteDialog" max-width="400">
       <v-card>
@@ -252,9 +253,9 @@ export default {
       
       sentimentOptions: [
         { text: 'الكل', value: null },
-        { text: 'إيجابي', value: 'positive' },
-        { text: 'محايد', value: 'neutral' },
-        { text: 'سلبي', value: 'negative' }
+        { text: 'إيجابي', value: 1 },
+        { text: 'محايد', value: 2 },
+        { text: 'سلبي', value: 3 }
       ],
 
       comments: [],

@@ -22,6 +22,12 @@
             :rules="[rules.required]" 
             required 
           />
+          <v-text-field 
+            v-model="channel.url" 
+            label="رابط القناة" 
+            :rules="[rules.required]" 
+            required 
+          />
           <v-textarea 
             v-model="channel.description" 
             label="الوصف" 
@@ -29,9 +35,27 @@
             required 
           />
           <v-text-field 
-            v-model="channel.image" 
-            label="رابط الصورة" 
-            :rules="[rules.required, rules.validUrl]" 
+          v-model="channel.image" 
+          label="رابط الصورة" 
+          :rules="[rules.required, rules.validUrl]" 
+          required 
+          />
+          <v-text-field  
+            v-model="channel.subscriber_count" 
+            label="عدد المشتركين" 
+            :rules="[]" 
+            required 
+          />
+          <v-text-field 
+            v-model="channel.view_count" 
+            label="عدد المشاهدات" 
+            :rules="[]" 
+            required 
+          />
+          <v-text-field  
+            v-model="channel.video_count" 
+            label="عدد الفديوهات" 
+            :rules="[]" 
             required 
           />
         </v-form>
@@ -68,7 +92,11 @@ export default {
         name: '',
         type: '',
         description: '',
-        image: ''
+        url: '',
+        image: '',
+        subscriber_count: '',
+        video_count: '',
+        view_count: '',
       },
       channelTypes: [
         { text: 'يوتيوب', value: 1 },
@@ -105,7 +133,11 @@ export default {
         name: '',
         type: '',
         description: '',
-        image: ''
+        url: '',
+        image: '',
+        subscriber_count: '',
+        video_count: '',
+        view_count: '',
       };
       if (this.$refs.form) {
         this.$refs.form.reset();

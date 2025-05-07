@@ -13,7 +13,7 @@
 <script>
 import AppNavbar from '@/components/AppNavbar.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
-import AppFooter from '@/components/AppFooter.vue';
+// import AppFooter from '@/components/AppFooter.vue';
 
 export default {
   name: 'App',

@@ -10,7 +10,7 @@
           <!-- اختر القناة: يتم تخزين الـ id فقط في video.channel -->
           <v-select
             v-model="video.channel"
-            :items="channels"
+            :items="[channels]"
             item-value="id"
             item-title="name"
             label="اختر القناة"
@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { BASE_URL } from '@/config';
 export default {
   name: "VideoForm",
 
@@ -98,12 +99,16 @@ export default {
     },
   },
 
+  async mounted() {
+    await this.fetchChannels();
+  },
+
   methods: {
     async fetchChannels() {
       this.loadingChannels = true;
       if (this.channels.length) return;
       try {
-        const res = await fetch('http://localhost:5454/api/channels-select/');
+        const res = await fetch(`${BASE_URL}api/channels-select/`);
         const data = await res.json();
         this.channels = data.results || [];
       } catch (err) {

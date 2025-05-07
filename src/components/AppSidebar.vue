@@ -4,7 +4,6 @@
     :temporary="$vuetify.display.xs || $vuetify.display.sm"
     :permanent="$vuetify.display.mdAndUp"
     :rail="rail"
-    width="250"
     ref="drawer"
     location="right"
     elevation="2"
@@ -15,7 +14,7 @@
           رسالة إلى النجاشي
         </div>
       </div>
-      <div style="flex: 1;">
+      <div style="flex: 1;" class="align-self-center">
         <v-btn
           @click="toggleRail"
           density="compact"
@@ -39,6 +38,7 @@
         :class="{'list-item-active': isActive(item.path)}"
       />
     </v-list>
+    
   </v-navigation-drawer>
 </template>
 
