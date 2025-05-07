@@ -10,7 +10,7 @@
           <!-- اختر القناة: يتم تخزين الـ id فقط في video.channel -->
           <v-select
             v-model="video.channel"
-            :items="[channels]"
+            :items="channels"
             item-value="id"
             item-title="name"
             label="اختر القناة"
