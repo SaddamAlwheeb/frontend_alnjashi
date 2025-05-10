@@ -106,9 +106,20 @@
           <tbody>
             <tr v-for="(content, i) in topContent" :key="i">
               <td class="text-right">
-                <div class="d-flex align-center">
-                  <v-img :src="content.thumbnail" width="80" height="45" cover rounded class="ml-2"></v-img>
-                  <span>{{ content.title }}</span>
+                <div class="d-flex align-center" style="width: 250px; overflow: hidden;">
+                  <v-img
+                    :src="getYoutubeThumbnail(content.thumbnail)"
+                    width="80px"
+                    height="45"
+                    cover
+                    rounded
+                    class="ml-2"
+                  ></v-img>
+                  <span
+                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;"
+                  >
+                    {{ content.title }}
+                  </span>
                 </div>
               </td>
               <td class="text-right">{{ content.views }}</td>
@@ -135,12 +146,19 @@
   </template>
   
   <script>
+  import { BASE_URL } from '@/config';
   export default {
     name: 'ReportsView',
     data() {
       return {
         dateRange: 'month',
         selectedChannel: null,
+        channelsCount : 0,
+        videosCount : 0,
+        commentsCount : 0,
+        positiveComments : 0,
+        neutralComments : 0,
+        negativeComments : 0,
         
         dateRanges: [
           { text: 'اليوم', value: 'day' },
@@ -156,11 +174,63 @@
           { text: 'المعرفة للجميع', value: 2 },
           { text: 'الدروس الإسلامية', value: 3 }
         ],
-        
-        summaryCards: [
+       
+        topContent: []
+
+        // {
+        //     title: 'رسالة إلى النجاشي - الجزء الأول',
+        //     thumbnail: 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+        //     views: '120K',
+        //     comments: 45,
+        //     likeRatio: 4.8,
+        //     date: '2025-05-01'
+        //   },
+      };
+    },
+    created(){
+      this.fetchSummaryStats();
+      this.fetchTopContent();
+    },
+
+    methods: {
+      async fetchSummaryStats() {
+        try {
+          const res = await fetch(`${BASE_URL}api/summary-stats`);
+          const data = await res.json();
+          this.channelsCount = data['channels_count'] || 0;
+          this.videosCount = data.videos_count || 0;
+          this.commentsCount = data.comments_count || 0;
+          this.positiveComments = data.positive_comments || 0;
+          this.neutralComments = data.neutral_comments || 0;
+          this.negativeComments = data.negative_comments || 0;
+        } catch (err) {
+          console.error('فشل تحميل التعليقات:', err);
+        }
+      },
+      async fetchTopContent() {
+        try {
+          const res = await fetch(`${BASE_URL}api/top-content/`);
+          this.topContent = await res.json();
+        } catch (err) {
+          console.error('فشل تحميل التعليقات:', err);
+        }
+      },
+      getYoutubeThumbnail(url) {
+        const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const match = url.match(regex);
+        if (match && match[1]) {
+          return `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+        }
+        return '';
+      }
+    },
+
+    computed: {
+      summaryCards() {
+        return [
           {
-            title: 'إجمالي المشاهدات',
-            value: '1.2M',
+            title: 'إجمالي القنوات',
+            value: this.channelsCount.toLocaleString(),
             icon: 'mdi-eye',
             avatarColor: 'blue lighten-4',
             iconColor: 'primary',
@@ -170,7 +240,7 @@
           },
           {
             title: 'عدد التعليقات',
-            value: '18,542',
+            value: this.commentsCount.toLocaleString(),
             icon: 'mdi-comment-multiple-outline',
             avatarColor: 'green lighten-4',
             iconColor: 'success',
@@ -180,7 +250,9 @@
           },
           {
             title: 'تعليقات إيجابية',
-            value: '84%',
+            value: `${Math.round(
+              (this.positiveComments / Math.max(1, this.commentsCount)) * 100
+            )}%`,
             icon: 'mdi-thumb-up',
             avatarColor: 'amber lighten-4',
             iconColor: 'warning',
@@ -189,61 +261,33 @@
             trendColor: 'success'
           },
           {
-            title: 'معدل المشاركة',
-            value: '6.5%',
-            icon: 'mdi-account-group',
+            title: 'تعليقات سلبية',
+            value: `${Math.round(
+              (this.negativeComments / Math.max(1, this.commentsCount)) * 100
+            )}%`,
+            icon: 'mdi-thumb-down',
+            avatarColor: 'red lighten-4',
+            iconColor: 'error',
+            trend: '-1.2%',
+            trendIcon: 'mdi-arrow-down',
+            trendColor: 'error'
+          },
+          {
+            title: 'تعليقات محايدة',
+            value: `${Math.round(
+              (this.neutralComments / Math.max(1, this.commentsCount)) * 100
+            )}%`,
+            icon: 'mdi-emoticon-neutral-outline',
             avatarColor: 'red lighten-4',
             iconColor: 'error',
             trend: '-1.2%',
             trendIcon: 'mdi-arrow-down',
             trendColor: 'error'
           }
-        ],
-        
-        topContent: [
-          {
-            title: 'رسالة إلى النجاشي - الجزء الأول',
-            thumbnail: 'https://images.pexels.com/photos/2774556/pexels-photo-2774556.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            views: '120K',
-            comments: 45,
-            likeRatio: 4.8,
-            date: '2025-05-01'
-          },
-          {
-            title: 'أخلاق الرسول - الجزء الأول',
-            thumbnail: 'https://images.pexels.com/photos/1616403/pexels-photo-1616403.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            views: '78K',
-            comments: 28,
-            likeRatio: 4.6,
-            date: '2025-05-10'
-          },
-          {
-            title: 'رسالة إلى النجاشي - الجزء الثاني',
-            thumbnail: 'https://images.pexels.com/photos/9002090/pexels-photo-9002090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            views: '95K',
-            comments: 32,
-            likeRatio: 4.5,
-            date: '2025-05-15'
-          },
-          {
-            title: 'الصدق في الإسلام',
-            thumbnail: 'https://images.pexels.com/photos/256736/pexels-photo-256736.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            views: '62K',
-            comments: 18,
-            likeRatio: 4.4,
-            date: '2025-05-08'
-          },
-          {
-            title: 'التوكل على الله',
-            thumbnail: 'https://images.pexels.com/photos/35888/amazing-beautiful-breathtaking-clouds.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-            views: '54K',
-            comments: 22,
-            likeRatio: 4.3,
-            date: '2025-04-25'
-          }
-        ]
-      };
+        ];
+      }
     }
+
   };
   </script>
   
