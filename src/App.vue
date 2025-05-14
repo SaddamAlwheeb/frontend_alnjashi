@@ -8,12 +8,7 @@ import { VContainer, VRow, VCol } from 'vuetify/components'
 </script>
 
 <template>
-  <!-- <v-container class="d-flex justify-center align-center" style="height: 100vh;"> -->
-    <!-- عرض مكون HelloWorld مع Props -->
-    <!-- <FetchComment msg="Vite + Vue" ing="saddam" /> -->
     <MainLayout/>
-    <!-- <ChannelsView msg="Vite + Vue" ing="saddam" /> -->
-  <!-- </v-container> -->
 </template>
 
 <style scoped>
